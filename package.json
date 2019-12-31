@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build":"node index.js",
     "start":"node index.js"
   },
   "dependencies": {

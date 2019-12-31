@@ -92,4 +92,6 @@ const app = http.createServer((req,res)=>{
         errFn('Please pass LaTeX formula via `tex` parameter or` mermaid` expression using `mer` parameter.');
     };
 });
+
+console.log(app);
 app.listen(8001);
