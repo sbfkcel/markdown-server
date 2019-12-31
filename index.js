@@ -4,48 +4,7 @@ const http = require("http"),
     mathjax = require("mathjax-node"),
     mermaid = require("./mermaid"),
     Svgo = require('svgo'),
-    svgoConfig = {
-        plugins: [
-            {cleanupAttrs:true},
-            {removeDoctype:true},
-            {removeXMLProcInst:true},
-            {removeComments:true},
-            {removeMetadata:true},
-            {removeTitle:true},
-            {removeDesc:true},
-            {removeUselessDefs:true},
-            {removeEditorsNSData:true},
-            {removeEmptyAttrs:true},
-            {removeHiddenElems:true},
-            {removeEmptyText:true},
-            {removeEmptyContainers:true},
-            {removeViewBox:true},
-            {cleanUpEnableBackground:true},
-            {convertStyleToAttrs:true},
-            {convertColors:true},
-            {convertPathData:true},
-            {convertTransform:true},
-            {removeUnknownsAndDefaults:true},
-            {removeNonInheritableGroupAttrs:true},
-            {removeUselessStrokeAndFill:true},
-            {removeUnusedNS:true},
-            {cleanupIDs:true},
-            {cleanupNumericValues:true},
-            {moveElemsAttrsToGroup:true},
-            {moveGroupAttrsToElems:true},
-            {collapseGroups:true},
-            {removeRasterImages:false},
-            {mergePaths:true},
-            {convertShapeToPath:true},
-            {sortAttrs:true},
-            {transformsWithOnePath:false},
-            {removeDimensions:false},
-            {removeAttrs:{
-                    attrs:'(stroke|fill)'
-                },
-            }
-        ]
-    };
+    svgoConfig = require('./svgoConfig');
 
 mathjax.start();
 
@@ -68,7 +27,6 @@ const app = http.createServer((req,res)=>{
         mermaid(mer).then(v => {
             successFn(v);
         }).catch(err => {
-            console.log(err);
             errFn('mermaid parameter error');               // 流程图输入错误
         });
     }else if(tex){
@@ -92,6 +50,4 @@ const app = http.createServer((req,res)=>{
         errFn('Please pass LaTeX formula via `tex` parameter or` mermaid` expression using `mer` parameter.');
     };
 });
-
-console.log(app);
 app.listen(8001);

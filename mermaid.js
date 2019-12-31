@@ -10,7 +10,9 @@ module.exports = str => {
             await page.goto(`file://${path.join(__dirname,'mermaid','page.html')}`);
             await page.$eval('#container', (container, definition) => {
                 container.innerHTML = definition;
-                window.mermaid.initialize({});
+                window.mermaid.initialize({
+                    theme:'forest'
+                });
                 window.mermaid.init(undefined, container);
             },str);
             resolve(await page.$eval('#container', container => container.innerHTML));
