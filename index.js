@@ -2,16 +2,16 @@ const http = require("http"),
     url = require('url'),
     qs = require('querystring'),
     mathjax = require("mathjax-node"),
-    mermaid = require("./mermaid"),
     Svgo = require('svgo'),
-    svgoConfig = require('./svgoConfig');
+    svgoConfig = require('./svgoConfig'),
+    yuml2svg = require('yuml2svg');
 
 mathjax.start();
 
 const app = http.createServer((req,res)=>{
     let queryObj = qs.parse(url.parse(req.url).query),
         tex = queryObj.tex,
-        mer = queryObj.mer,
+        yuml = queryObj.yuml,
         errFn = (msg)=>{
             res.writeHead(404,{'Content-type':'text/html;charset=utf-8'});
             res.write(msg);
@@ -23,11 +23,15 @@ const app = http.createServer((req,res)=>{
             res.end();
         };
 
-    if(mer){
-        mermaid(mer).then(v => {
-            successFn(v);
-        }).catch(err => {
-            errFn('mermaid parameter error');               // 流程图输入错误
+    if(yuml){
+        yuml2svg(yuml).then(v => {
+            new Svgo().optimize(v).then(result => {
+                successFn(result.data);
+            }).catch(err => {
+                errFn('Yuml SVG compression error!');       // SVG压缩错误
+            });
+        }).catch(e => {
+            errFn('Yuml formula is wrong!');
         });
     }else if(tex){
         mathjax.typeset({
@@ -46,8 +50,8 @@ const app = http.createServer((req,res)=>{
             };
         })
     }else{
-        // 请通过`tex`参数传入LaTeX公式，或使用`mer`参数传入`mermaid`表达式。
-        errFn('Please pass LaTeX formula via `tex` parameter or` mermaid` expression using `mer` parameter.');
+        // 请通过`tex`参数传入LaTeX公式，或使用`yuml`参数传入`yuml`表达式。
+        errFn('Please pass LaTeX formula via `tex` parameter or `Yuml` expression using `yuml` parameter.');
     };
 });
 app.listen(8001);
