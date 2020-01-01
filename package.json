@@ -4,11 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start":"node index.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "mathjax-node": "^2.1.1",
     "puppeteer": "^2.0.0",
-    "svgo": "^1.3.2"
+    "svgo": "^1.3.2",
+    "yuml2svg": "^4.2.2"
   }
 }
