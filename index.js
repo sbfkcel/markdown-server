@@ -12,6 +12,7 @@ const app = http.createServer((req,res)=>{
     let queryObj = qs.parse(url.parse(req.url).query),
         tex = queryObj.tex,
         yuml = queryObj.yuml,
+        theme = queryObj.theme,
         errFn = (msg)=>{
             res.writeHead(404,{'Content-type':'text/html;charset=utf-8'});
             res.write(msg);
@@ -22,9 +23,9 @@ const app = http.createServer((req,res)=>{
             res.write(result);
             res.end();
         };
-
+    
     if(yuml){
-        yuml2svg(yuml).then(v => {
+        yuml2svg(yuml,{isDark:theme === 'dark'}).then(v => {
             new Svgo().optimize(v).then(result => {
                 successFn(result.data);
             }).catch(err => {
@@ -43,6 +44,9 @@ const app = http.createServer((req,res)=>{
                 errFn('LaTeX formula is wrong!');           // LaTeX公式错误
             }else{
                 new Svgo(svgoConfig).optimize(data.svg).then(result => {
+                    if(theme === 'dark'){
+                        result.data = result.data.replace(`<svg`,`<svg fill="#ffffff" `);
+                    }
                     successFn(result.data);
                 }).catch(err => {
                     errFn('LaTeX SVG compression error!');  // SVG压缩错误
