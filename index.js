@@ -46,7 +46,7 @@ const app = http.createServer((req,res)=>{
                 new Svgo(svgoConfig).optimize(data.svg).then(result => {
                     if(theme === 'dark'){
                         result.data = result.data.replace(`<svg`,`<svg fill="#ffffff" `);
-                    }
+                    };
                     successFn(result.data);
                 }).catch(err => {
                     errFn('LaTeX SVG compression error!');  // SVG压缩错误
