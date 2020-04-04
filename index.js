@@ -2,8 +2,6 @@ const http = require("http"),
     url = require('url'),
     qs = require('querystring'),
     mathjax = require("mathjax-node"),
-    Svgo = require('svgo'),
-    svgoConfig = require('./svgoConfig'),
     yuml2svg = require('yuml2svg');
 
 mathjax.start();
@@ -26,11 +24,7 @@ const app = http.createServer((req,res)=>{
     
     if(yuml){
         yuml2svg(yuml,{isDark:theme === 'dark'}).then(v => {
-            new Svgo().optimize(v).then(result => {
-                successFn(result.data);
-            }).catch(err => {
-                errFn('Yuml SVG compression error!');       // SVG压缩错误
-            });
+            successFn(v);
         }).catch(e => {
             errFn('Yuml formula is wrong!');
         });
@@ -40,18 +34,10 @@ const app = http.createServer((req,res)=>{
             format:'TeX',
             svg:true
         },data => {
-            if(data.errors){
-                errFn('LaTeX formula is wrong!');           // LaTeX公式错误
-            }else{
-                new Svgo(svgoConfig).optimize(data.svg).then(result => {
-                    if(theme === 'dark'){
-                        result.data = result.data.replace(`<svg`,`<svg fill="#ffffff" `);
-                    };
-                    successFn(result.data);
-                }).catch(err => {
-                    errFn('LaTeX SVG compression error!');  // SVG压缩错误
-                });
+            if(theme === 'dark'){
+                data.svg = data.svg.replace(/fill="currentColor"/g,'fill="#ffffff"');
             };
+            successFn(data.svg);
         })
     }else{
         // 请通过`tex`参数传入LaTeX公式，或使用`yuml`参数传入`yuml`表达式。
