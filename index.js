@@ -2,7 +2,8 @@ const http = require("http"),
     url = require('url'),
     qs = require('querystring'),
     mathjax = require("mathjax-node"),
-    yuml2svg = require('yuml2svg');
+    yuml2svg = require('yuml2svg'),
+    port=process.env.PORT||9001;
 
 mathjax.start();
 
@@ -44,4 +45,4 @@ const app = http.createServer((req,res)=>{
         errFn('Please pass LaTeX formula via `tex` parameter or `Yuml` expression using `yuml` parameter.');
     };
 });
-app.listen(8001);
+app.listen(port);
