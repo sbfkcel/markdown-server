@@ -1,6 +1,6 @@
 # Markdown-server
 
-Markdown-server 提供了Markdown的数学公式 `Lexte`，以及流程图`yUML`服务端渲染支持。
+Markdown-server 提供了Markdown的数学公式 `LaTex`，以及流程图`yUML`服务端渲染支持。
 
 ## 如何使用
 
